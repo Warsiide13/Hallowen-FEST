@@ -1,813 +1,97 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>¡Mi Pool Party! - Mis 15 Años</title>
-
-    <!-- Google Fonts & FontAwesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Montserrat:wght@400;700&family=Pinyon+Script&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-    <!-- CDN de GSAP y ScrollTrigger -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-
-    <style>
-        :root {
-            --pool-blue: #00f0ff; 
-            --flamingo-pink: #ff007f; 
-            --sun-yellow: #ffe600; 
-            --lime-green: #00ff66; 
-            --white: #ffffff;
-
-            /* Degradados base tropicales */
-            --grad-envelope: linear-gradient(135deg, #0a2235 0%, #11354c 100%);
-            --grad-hero: linear-gradient(180deg, rgba(10, 28, 42, 0.6) 0%, rgba(0, 196, 209, 0.8) 100%);
-            --grad-details: linear-gradient(180deg, #00c4d1 0%, #0072ff 100%);
-            --grad-location: linear-gradient(180deg, #0072ff 0%, #7a00ff 100%);
-            --grad-info: linear-gradient(180deg, #7a00ff 0%, #ff007f 100%);
-            --grad-rsvp: linear-gradient(180deg, #ff007f 0%, #20003b 100%);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: "Montserrat", sans-serif;
-            background-color: #20003b;
-            color: var(--white);
-            overflow-x: hidden;
-        }
-
-        /* --- EFECTO LETRERO NEÓN EN TÍTULOS --- */
-        h1.neon-title {
-            font-family: "Fredoka One", cursive;
-            color: #fff;
-            text-shadow:
-                0 0 5px #fff,
-                0 0 10px #fff,
-                0 0 20px var(--flamingo-pink),
-                0 0 40px var(--flamingo-pink),
-                0 0 60px var(--flamingo-pink);
-        }
-
-        h2 {
-            font-family: "Fredoka One", cursive;
-            color: var(--white);
-            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .cursive {
-            font-family: "Pinyon Script", cursive;
-            color: var(--sun-yellow);
-            font-size: 4rem;
-            text-shadow: 0 0 10px rgba(255, 230, 0, 0.5);
-        }
-
-        /* --- GUIRNALDA DE LUCES NEÓN --- */
-        .neon-string {
-            position: absolute;
-            top: 25px;
-            left: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-around;
-            padding: 0 5%;
-            z-index: 15;
-            pointer-events: none;
-        }
-
-        .neon-bulb {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #fff;
-            position: relative;
-            box-shadow: 0 0 10px #fff;
-        }
-
-        .bulb-pink { box-shadow: 0 0 8px #fff, 0 0 15px var(--flamingo-pink), 0 0 25px var(--flamingo-pink); }
-        .bulb-blue { box-shadow: 0 0 8px #fff, 0 0 15px var(--pool-blue), 0 0 25px var(--pool-blue); }
-        .bulb-yellow { box-shadow: 0 0 8px #fff, 0 0 15px var(--sun-yellow), 0 0 25px var(--sun-yellow); }
-        .bulb-green { box-shadow: 0 0 8px #fff, 0 0 15px var(--lime-green), 0 0 25px var(--lime-green); }
-
-        .neon-string::before {
-            content: "";
-            position: absolute;
-            top: 6px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.15);
-            z-index: -1;
-        }
-
-        /* --- BURBUJAS --- */
-        #bubbles-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 2;
-            overflow: hidden;
-        }
-
-        .bubble {
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.1) 40%, rgba(0, 240, 255, 0.25) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.3);
-            pointer-events: none;
-        }
-
-        /* --- SOBRE INICIAL --- */
-        #envelope-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: var(--grad-envelope);
-            z-index: 1000;
-            perspective: 1200px;
-            transform-style: preserve-3d;
-            overflow: hidden;
-        }
-
-        .bg-video-envelope {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .moving-target {
-            position: absolute;
-            width: 260px;   
-            height: 230px;  
-            transform-style: preserve-3d;
-            cursor: pointer;
-            z-index: 2;
-        }
-
-        .envelope-container {
-            position: relative;
-            width: 260px;   
-            height: 180px;  
-            transform-style: preserve-3d;
-        }
-
-        .envelope {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #1a3a52 0%, #0a1c28 100%);
-            border: 3px solid var(--pool-blue);
-            border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0, 240, 255, 0.35);
-            z-index: 2;
-            transition: border-color 0.2s ease;
-        }
-
-        .flap {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 0;
-            border-left: 127px solid transparent;
-            border-right: 127px solid transparent;
-            border-top: 90px solid var(--pool-blue);
-            transform-origin: top;
-            z-index: 5;
-        }
-
-        .letter {
-            position: absolute;
-            top: 10px;
-            left: 11px;
-            width: 232px;  
-            height: 156px; 
-            background: linear-gradient(135deg, #ff007f 0%, #7a00ff 100%);
-            border-radius: 8px;
-            z-index: 3;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
-            border: 2px solid #fff;
-            box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
-            transform: translateZ(-1px);
-        }
-
-        .letter h3 {
-            font-family: 'Fredoka One', cursive;
-            color: var(--sun-yellow);
-            font-size: 1.4rem;
-            margin-bottom: 4px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .envelope-text {
-            position: absolute;
-            bottom: 20px;
-            width: 100%;
-            text-align: center;
-            font-family: "Fredoka One", cursive;
-            font-size: 1.4rem;
-            color: var(--white);
-            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
-            z-index: 4;
-        }
-
-        .click-hint {
-            margin-top: 15px;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            color: var(--pool-blue);
-            animation: pulse 1.5s infinite alternate;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-            text-align: center;
-            transition: color 0.2s ease;
-        }
-
-        /* --- CONTENIDO PRINCIPAL --- */
-        #main-content {
-            opacity: 0;
-            visibility: hidden;
-            display: none;
-        }
-
-        section {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 140px 20px 160px;
-            position: relative;
-        }
-
-        .content-wrapper {
-            position: relative;
-            z-index: 3;
-            width: 100%;
-            max-width: 800px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .wave-divider {
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            overflow: hidden;
-            line-height: 0;
-            z-index: 4;
-            transform-origin: bottom;
-        }
-
-        .wave-divider svg {
-            position: relative;
-            display: block;
-            width: calc(130% + 1.3px);
-            height: 100px;
-        }
-
-        .hero {
-            background: var(--grad-hero), url("https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&q=80&w=1920") no-repeat center center/cover;
-        }
-        .hero h1 { font-size: 5.5rem; line-height: 1; margin: 20px 0 15px; }
-        .hero p { font-size: 1.1rem; font-weight: bold; letter-spacing: 4px; }
-
-        .details-section { background: var(--grad-details); }
-        .location-section { background: var(--grad-location); }
-        .info-section { background: var(--grad-info); gap: 30px; }
-        .rsvp-section { background: var(--grad-rsvp); }
-
-        .counter-container {
-            display: flex;
-            gap: 15px;
-            margin-top: 40px;
-        }
-
-        .time-box {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(5px);
-            border: 2px solid var(--white);
-            padding: 20px;
-            border-radius: 25px;
-            min-width: 95px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .time-box span {
-            display: block;
-            font-size: 2.5rem;
-            font-family: "Fredoka One", cursive;
-            color: var(--sun-yellow);
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(15px);
-            border: 2px solid rgba(255, 255, 255, 0.25);
-            padding: 40px 30px;
-            border-radius: 35px;
-            max-width: 600px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-        }
-
-        .info-card {
-            background: rgba(0, 0, 0, 0.2);
-            border: 2px dashed var(--sun-yellow);
-            border-radius: 25px;
-            max-width: 400px;
-            padding: 35px;
-        }
-
-        .info-card i {
-            font-size: 3.5rem;
-            color: var(--sun-yellow);
-            margin-bottom: 15px;
-        }
-
-        .btn {
-            display: inline-block;
-            margin-top: 25px;
-            padding: 16px 40px;
-            background-color: var(--sun-yellow);
-            color: #20003b;
-            text-decoration: none;
-            font-weight: bold;
-            font-family: "Fredoka One", cursive;
-            letter-spacing: 1px;
-            border-radius: 50px;
-            box-shadow: 0 8px 25px rgba(255, 230, 0, 0.4);
-        }
-
-        .btn-whatsapp {
-            background-color: #25d366;
-            color: var(--white);
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
-        }
-
-        #music-control {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--sun-yellow);
-            color: #20003b;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 999;
-            box-shadow: 0 0 20px var(--sun-yellow);
-            display: none;
-            font-size: 1.3rem;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 0.7; }
-            100% { transform: scale(1.05); opacity: 1; }
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#050505">
+  <meta name="description" content="Halloween Fest · sábado 7 de noviembre de 2026 a las 21:00.">
+  <meta property="og:title" content="Halloween Fest · 07.11.2026">
+  <meta property="og:description" content="Tienes una invitación. Atrévete a cruzar al otro lado.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="invitacion%20image.jpeg">
+  <title>Halloween Fest · Invitación</title>
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Rubik+Wet+Paint&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="invitacion%20image.jpeg" fetchpriority="high">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    try {
+      document.documentElement.classList.add(sessionStorage.getItem("halloweenEnvelopeFlowV3") === "1" ? "invitation-opened" : "poster-visible");
+    } catch (_) { document.documentElement.classList.add("poster-visible"); }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="script.js"></script>
 </head>
 <body>
-    <!-- AUDIO GLOBAL -->
-    <audio id="bg-music" loop>
-        <source src="2.mp3" type="audio/mpeg" />
-    </audio>
-
-    <!-- CONTROL AUDIO -->
-    <div id="music-control">
-        <i class="fas fa-volume-up"></i>
+  <a class="skip-link" id="skipLink" href="#mainContent">Saltar al contenido</a>
+  <div class="invitation-gate" id="invitationGate" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+    <div class="intro-poster" aria-hidden="true"><img src="invitacion image.jpeg" width="1024" height="1536" alt="" fetchpriority="high" decoding="async"></div>
+    <div class="intro-vignette" aria-hidden="true"></div>
+    <div class="intro-copy">
+      <p class="intro-kicker">ACCESO EXCLUSIVO</p>
+      <h1 class="sr-only" id="introTitle">Invitación a Halloween Fest</h1>
+      <p class="intro-date"><span data-event="weekday">SÁBADO</span> <strong data-event="day">07</strong> <span data-event="monthYear">NOV / 2026</span></p>
+      <button class="intro-button" id="continuePoster" type="button" aria-describedby="introHint">CONTINUAR <span aria-hidden="true">↗</span></button>
+      <p class="intro-hint" id="introHint">EL SOBRE APARECERÁ AUTOMÁTICAMENTE</p>
     </div>
+  </div>
 
-    <!-- SOBRE DE BIENVENIDA -->
-    <div id="envelope-wrapper">
-        <video class="bg-video-envelope" autoplay loop muted playsinline>
-            <source src="1.mp4" type="video/mp4" />
-        </video>
+  <div class="envelope-gate" id="envelopeGate" role="dialog" aria-modal="true" aria-labelledby="envelopeTitle" aria-hidden="true" inert>
+    <div class="envelope-smoke smoke-purple" aria-hidden="true"></div><div class="envelope-smoke smoke-green" aria-hidden="true"></div>
+    <button class="envelope" id="openEnvelope" type="button" aria-describedby="envelopeInstruction">
+      <span class="envelope-shadow" aria-hidden="true"></span>
+      <span class="envelope-letter" aria-hidden="true"><span>ACCESO AUTORIZADO</span><strong>ESTÁS<br>INVITADO/A</strong><i>HALLOWEEN FEST</i></span>
+      <span class="envelope-back" aria-hidden="true"></span><span class="envelope-flap" aria-hidden="true"></span>
+      <span class="envelope-front">
+        <span class="envelope-kicker">MENSAJE CONFIDENCIAL · 07.11</span>
+        <strong id="envelopeTitle">TIENES UNA<br><em>INVITACIÓN</em></strong>
+        <span class="envelope-guest" id="envelopeGuest">ALEJANDRO</span>
+        <span class="led-seal" aria-hidden="true"><i class="eye eye-left"></i><i class="eye eye-right"></i><i class="seal-smile"></i></span>
+        <span class="envelope-tap" id="envelopeInstruction"><i></i> TOCA PARA ABRIR</span>
+      </span>
+    </button>
+    <p class="envelope-foot">ENTRADA ÚNICA · NO COMPARTAS ESTE PASE</p>
+  </div>
 
-        <!-- Bloque completo móvil -->
-        <div class="moving-target" id="moving-target">
-            <div class="envelope-container" id="interactive-envelope">
-                <div class="flap" id="envelope-flap"></div>
-                <div class="letter" id="envelope-letter">
-                    <h3>¡Pool Party!</h3>
-                    <p style="font-size: 0.8rem; font-weight: bold; text-align: center; color: #fff; letter-spacing: 1px;">✨ ESTÁS INVITADO(A) ✨</p>
-                </div>
-                <div class="envelope" id="envelope-base"></div>
-                <div class="envelope-text" id="envelope-txt">ABRE LA INVITACION! 🏖️</div>
-            </div>
-        </div>
-    </div>
+  <div class="site-shell" id="siteShell" aria-hidden="true" inert>
+    <div class="scroll-progress" aria-hidden="true"><span id="scrollProgress"></span></div><canvas class="particle-canvas" id="particles" aria-hidden="true"></canvas>
+    <header class="topbar">
+      <a class="wordmark" href="#top" aria-label="Halloween Fest, inicio"><span>HF</span><small data-event="numericDate">07 · 11 · 2026</small></a>
+      <div class="topbar-actions"><button class="sound-button" id="soundToggle" type="button" aria-pressed="false" aria-label="Activar música"><i></i><span id="soundLabel">MÚSICA OFF</span></button><button class="menu-button" id="menuToggle" type="button" aria-expanded="false" aria-controls="siteMenu" aria-label="Abrir menú"><span></span><span></span></button></div>
+    </header>
+    <nav class="menu-overlay" id="siteMenu" aria-hidden="true" inert><p>ACCESO / NAVEGACIÓN</p><a href="#vip">Tu pase <span>01</span></a><a href="#countdown">Cuenta atrás <span>02</span></a><a href="#location">Dónde y cuándo <span>03</span></a><a href="#itinerary">La noche <span>04</span></a><a href="#dress-code">Dress code <span>05</span></a><a href="#rsvp">Confirmar <span>06</span></a><small>HALLOWEEN FEST · 2026</small></nav>
 
-    <!-- CONTENIDO GENERAL DE LA INVITACIÓN -->
-    <div id="main-content">
-        <div id="bubbles-container"></div>
+    <main id="mainContent" tabindex="-1">
+      <section class="hero" id="top" aria-labelledby="heroTitle">
+        <div class="hero-poster" aria-hidden="true"><div class="poster-reference"></div><div class="hero-moon"></div><div class="web web-one"></div><div class="web web-two"></div><div class="paint paint-green"></div><div class="paint paint-purple"></div><div class="paint paint-orange"></div><div class="bat bat-a">◆</div><div class="bat bat-b">◆</div><div class="bat bat-c">◆</div><div class="mask-stage" id="maskStage"><div class="mask-halo"></div><img src="s-l1200.jpg" width="1200" height="1200" alt="" fetchpriority="high" decoding="async"></div></div>
+        <div class="hero-copy"><p class="spray-label reveal">ESTÁS INVITADO/A</p><h1 id="heroTitle" class="glitch-title" data-text="HALLOWEEN">HALLOWEEN</h1><p class="hero-fest">FEST <span>2026</span></p><div class="hero-date"><span data-event="weekday">SÁBADO</span><strong data-event="day">07</strong><span><b data-event="month">OCTUBRE</b><br><i data-event="time">21:00 HRS</i></span></div><a class="scroll-cue" href="#vip"><span>DESLIZA AL OTRO LADO</span><i>↓</i></a></div>
+      </section>
 
-        <!-- 1. PORTADA -->
-        <section class="hero" id="sec-hero">
-            <div class="neon-string">
-                <div class="neon-bulb bulb-pink"></div>
-                <div class="neon-bulb bulb-blue"></div>
-                <div class="neon-bulb bulb-yellow"></div>
-                <div class="neon-bulb bulb-green"></div>
-                <div class="neon-bulb bulb-pink"></div>
-                <div class="neon-bulb bulb-blue"></div>
-                <div class="neon-bulb bulb-yellow"></div>
-                <div class="neon-bulb bulb-green"></div>
-            </div>
+      <section class="vip-section section-shell" id="vip" aria-labelledby="vipTitle"><div class="section-tag reveal"><span>01</span> TU ACCESO</div><div class="vip-ticket reveal-card"><div class="ticket-noise" aria-hidden="true"></div><div class="ticket-main"><p>ADMISIÓN ESPECIAL</p><h2 id="vipTitle">PASE <em>VIP</em></h2><span class="ticket-for">ESTE PASE PERTENECE A</span><strong class="guest-name" id="guestName">ALEJANDRO</strong><div class="ticket-meta"><span>VÁLIDO PARA</span><b id="passCount">02</b><span>ALMAS</span></div></div><div class="ticket-stub"><span>HF/2026</span><div class="barcode" aria-hidden="true"></div><small>NO TRANSFERIBLE</small></div></div></section>
 
-            <div class="content-wrapper animate-hero">
-                <p>¡PREPÁRATE PARA LA MEJOR FIESTA DEL AÑO!</p>
-                <span class="cursive">Mis 15 Años</span>
-                <h1 class="neon-title" id="main-neon-title">Noemi</h1>
-                <p style="color: var(--sun-yellow); font-size: 1.4rem; letter-spacing: 2px;">• POOL PARTY STYLE •</p>
-            </div>
+      <section class="countdown-section" id="countdown" aria-labelledby="countdownTitle"><div class="section-shell"><div class="section-tag reveal"><span>02</span> EL RELOJ CORRE</div><p class="paint-note">ANTES DE QUE CAIGA LA NOCHE</p><h2 id="countdownTitle" class="section-title reveal">FALTAN...</h2><div class="countdown" role="timer" aria-label="Cuenta regresiva para Halloween Fest"><div><strong id="days">000</strong><span>DÍAS</span></div><div><strong id="hours">00</strong><span>HORAS</span></div><div><strong id="minutes">00</strong><span>MIN</span></div><div><strong id="seconds">00</strong><span>SEG</span></div></div><p class="count-status" id="countStatus" aria-live="polite"></p></div></section>
 
-            <div class="wave-divider">
-                <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
-                    <path class="wave-back" fill="rgba(0, 196, 209, 0.4)" d="M0,32L120,42.7C240,53,480,75,720,74.7C960,75,1200,53,1320,42.7L1440,32L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
-                    <path class="wave-front" fill="#00c4d1" d="M0,64L120,58.7C240,53,480,43,720,53.3C960,64,1200,96,1320,101.3L1440,106L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
-                </svg>
-            </div>
-        </section>
+      <section class="essentials section-shell" id="location" aria-labelledby="detailsTitle"><div class="section-tag reveal"><span>03</span> COORDENADAS</div><h2 class="section-title reveal" id="detailsTitle">¿DÓNDE<br>Y CUÁNDO?</h2><div class="detail-grid"><article class="detail-card reveal-card"><span class="neon-icon" aria-hidden="true">▦</span><small>FECHA</small><strong data-event="fullDate">07 NOVIEMBRE 2026</strong><p>Reserva la noche completa.</p></article><article class="detail-card reveal-card"><span class="neon-icon purple" aria-hidden="true">◷</span><small>HORA</small><strong data-event="time">21:00 HRS</strong><p>Las puertas abren 30 min antes.</p></article><article class="detail-card location-card reveal-card"><span class="neon-icon orange" aria-hidden="true">⌖</span><small>LUGAR</small><strong id="locationName">HACIENDA BLACKWOOD</strong><p id="locationAddress">Av. Ejemplo 666, Ciudad de México</p><a id="mapLink" href="#" target="_blank" rel="noopener noreferrer">ABRIR EN GOOGLE MAPS ↗</a></article></div><p class="sample-note">Lugar y dirección de ejemplo: personalízalos en <code>EVENT</code>, dentro de <code>script.js</code>.</p></section>
 
-        <!-- 2. CUENTA REGRESIVA -->
-        <section class="details-section" id="sec-details">
-            <div class="neon-string">
-                <div class="neon-bulb bulb-green"></div>
-                <div class="neon-bulb bulb-yellow"></div>
-                <div class="neon-bulb bulb-blue"></div>
-                <div class="neon-bulb bulb-pink"></div>
-                <div class="neon-bulb bulb-green"></div>
-                <div class="neon-bulb bulb-yellow"></div>
-                <div class="neon-bulb bulb-blue"></div>
-                <div class="neon-bulb bulb-pink"></div>
-            </div>
+      <section class="itinerary-section" id="itinerary" aria-labelledby="itineraryTitle"><div class="section-shell"><div class="section-tag reveal"><span>04</span> PLAN DE ATAQUE</div><h2 class="section-title reveal" id="itineraryTitle">LA NOCHE<br><em>APENAS COMIENZA</em></h2><ol class="timeline"><li class="timeline-item"><time>20:30</time><div><span>CHECK-IN</span><h3>LAS PUERTAS SE ABREN</h3><p>Una copa de bienvenida y el primer retrato de la noche.</p></div></li><li class="timeline-item"><time>21:00</time><div><span>INICIO</span><h3>COMIENZA LA NOCHE</h3><p>Las luces bajan, el neón despierta y nadie mira atrás.</p></div></li><li class="timeline-item"><time>22:00</time><div><span>RECARGA</span><h3>CENA</h3><p>Un banquete para recuperar fuerzas antes de medianoche.</p></div></li><li class="timeline-item"><time>23:00</time><div><span>RETO</span><h3>RITUAL DE MEDIANOCHE</h3><p>Disfraces, pistas y una sorpresa entre humo de color.</p></div></li><li class="timeline-item"><time>00:00</time><div><span>SIN CONTROL</span><h3>HALLOWEEN PARTY</h3><p>La pista seguirá viva hasta que se apague la última luz.</p></div></li></ol></div></section>
 
-            <div class="content-wrapper core-details">
-                <h2>¿Cuánto falta para el clavado?</h2>
-                <p style="font-size: 1.5rem; font-weight: bold; margin: 15px 0; color: #20003b; letter-spacing: 1px;">
-                    DOMINGO, 25 DE JULIO DEL 2026
-                </p>
-                <p style="font-weight: 600">¡Te veo en el agua a partir de las 2:00 PM!</p>
+      <section class="dress-section" id="dress-code" aria-labelledby="dressTitle"><div class="dress-image" aria-hidden="true"><img src="invitacion image.jpeg" width="1024" height="1536" loading="lazy" alt=""><div></div></div><div class="dress-copy section-shell"><div class="section-tag reveal"><span>05</span> CÓDIGO DE ACCESO</div><p class="warning-label">¡ATENCIÓN!</p><h2 id="dressTitle" class="section-title reveal">DISFRAZ<br><em>OBLIGATORIO</em></h2><p>Ven convertido en tu versión más oscura, extraña o espectacular. La única regla es no llegar como todos los días.</p><div class="dress-tags"><span>HORROR</span><span>NEÓN</span><span>CRIATURA</span><span>ÍCONO</span></div></div></section>
 
-                <div class="counter-container">
-                    <div class="time-box">
-                        <span id="days">00</span>
-                        <p style="font-size: 0.8rem; font-weight: bold; color: #20003b">DÍAS</p>
-                    </div>
-                    <div class="time-box">
-                        <span id="hours">00</span>
-                        <p style="font-size: 0.8rem; font-weight: bold; color: #20003b">HORAS</p>
-                    </div>
-                    <div class="time-box">
-                        <span id="minutes">00</span>
-                        <p style="font-size: 0.8rem; font-weight: bold; color: #20003b">MINUTOS</p>
-                    </div>
-                </div>
-            </div>
+      <section class="rules-section section-shell" aria-labelledby="rulesTitle"><div class="section-tag reveal"><span>06</span> ANTES DE ENTRAR</div><h2 class="section-title reveal" id="rulesTitle">REGLAS DE<br>LA CASA</h2><div class="rules-grid"><article class="rule reveal-card"><b>01</b><span aria-hidden="true">✕</span><h3>DISFRAZ OBLIGATORIO</h3><p>Deja que tu alter ego salga a la luz.</p></article><article class="rule reveal-card"><b>02</b><span aria-hidden="true">☠</span><h3>DEJA EL MIEDO AFUERA</h3><p>Lo que encuentres dentro es otra historia.</p></article><article class="rule reveal-card"><b>03</b><span aria-hidden="true">⌛</span><h3>NO LLEGUES TARDE</h3><p>Algunas puertas solo se abren una vez.</p></article><article class="rule reveal-card"><b>04</b><span aria-hidden="true">⚡</span><h3>VEN A ROMPER LA NOCHE</h3><p>Trae energía; nosotros ponemos el resto.</p></article></div></section>
 
-            <div class="wave-divider">
-                <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
-                    <path class="wave-back" fill="rgba(0, 85, 255, 0.4)" d="M0,64L120,58.7C240,53,480,43,720,53.3C960,64,1200,96,1320,101.3L1440,106L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
-                    <path class="wave-front" fill="#0072ff" d="M0,96L120,85.3C240,75,480,53,720,53.3C960,53,1200,75,1320,80L1440,85L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
-                </svg>
-            </div>
-        </section>
 
-        <!-- 3. LUGAR -->
-        <section class="location-section" id="sec-location">
-            <div class="neon-string">
-                <div class="neon-bulb bulb-blue"></div>
-                <div class="neon-bulb bulb-pink"></div>
-                <div class="neon-bulb bulb-green"></div>
-                <div class="neon-bulb bulb-yellow"></div>
-                <div class="neon-bulb bulb-blue"></div>
-                <div class="neon-bulb bulb-pink"></div>
-                <div class="neon-bulb bulb-green"></div>
-                <div class="neon-bulb bulb-yellow"></div>
-            </div>
+      <section class="rsvp-section" id="rsvp" aria-labelledby="rsvpTitle"><div class="rsvp-mask" aria-hidden="true"><img src="s-l1200.jpg" width="1200" height="1200" loading="lazy" alt=""></div><div class="rsvp-panel"><div class="section-tag"><span>07</span> ÚLTIMA DECISIÓN</div><h2 class="section-title" id="rsvpTitle">¿TE ATREVES<br><em>A VENIR?</em></h2><p>Confirma antes de que las puertas se cierren.</p><form id="rsvpForm" class="rsvp-form"><label for="rsvpName">TU NOMBRE</label><input id="rsvpName" name="name" autocomplete="name" required><label for="guestNumber">NÚMERO DE INVITADOS</label><select id="guestNumber" name="guests"></select><button class="primary-button" type="submit">CONFIRMAR ASISTENCIA <span>↗</span></button><button class="secondary-button" id="declineButton" type="button">ESTA VEZ NO</button><p class="rsvp-status" id="rsvpStatus" role="status" aria-live="polite"></p></form><a class="whatsapp-link" id="whatsappLink" href="#">CONFIRMAR POR WHATSAPP</a></div></section>
 
-            <div class="content-wrapper core-location">
-                <div class="glass-card">
-                    <h2 style="color: var(--sun-yellow); margin-bottom: 10px">¿Dónde será?</h2>
-                    <p style="font-size: 1.6rem; font-weight: 700; margin-bottom: 15px">Terraza Chic</p>
-                    <p style="line-height: 1.7; font-size: 1.05rem">¡Tendremos la oportunidad de convivir sobre el agua!</p>
-                    <p style="margin-top: 20px; font-weight: bold; color: var(--pool-blue);">
-                        <i class="fas fa-map-marker-alt"></i> Av. De las Rosas #123, Zapopan, Jal.
-                    </p>
-                    <a href="https://www.google.com/maps/place/Terraza+Chic/@20.6719947,-103.2807457,17z/data=!3m1!4b1!4m6!3m5!1s0x8428b1779464631f:0x6a327eda2f898468!8m2!3d20.6719897!4d-103.2781708!16s%2Fg%2F11ljtw7m2q?entry=ttu&g_ep=EgoyMDI2MDcxNS4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn"><i class="fas fa-location-arrow"></i> VER EN MAPA</a>
-                </div>
-            </div>
-
-            <div class="wave-divider">
-                <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
-                    <path class="wave-back" fill="rgba(94, 0, 255, 0.4)" d="M0,96L120,85.3C240,75,480,53,720,53.3C960,53,1200,75,1320,80L1440,85L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
-                    <path class="wave-front" fill="#7a00ff" d="M0,32L120,42.7C240,53,480,75,720,74.7C960,75,1200,53,1320,42.7L1440,32L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
-                </svg>
-            </div>
-        </section>
-
-        <!-- 4. DRESS CODE & REGALOS -->
-        <section class="info-section" id="sec-info">
-            <div class="content-wrapper core-info" style="flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 30px;">
-                <div class="info-card">
-                    <i class="fas fa-tshirt"></i>
-                    <h3>Outfit Pool Chic</h3>
-                    <p style="margin-top: 10px; line-height: 1.6">
-                        Trae tu ropa playera más cool y **tu traje de baño**. ¡Habrá cambiadores disponibles en la terraza!
-                    </p>
-                </div>
-
-                <div class="info-card" style="border-color: var(--pool-blue)">
-                    <i class="fas fa-gift" style="color: var(--pool-blue)"></i>
-                    <h3 style="color: var(--pool-blue)">Lluvia de Sobres</h3>
-                    <p style="margin-top: 10px; line-height: 1.6">
-                        Tu asistencia es mi mejor regalo. Si deseas obsequiarme algo, puedes hacerlo y ponerlo en la mesa delos regalos.
-                    </p>
-                </div>
-            </div>
-
-            <div class="wave-divider">
-                <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
-                    <path class="wave-back" fill="rgba(255, 0, 102, 0.4)" d="M0,32L120,42.7C240,53,480,75,720,74.7C960,75,1200,53,1320,42.7L1440,32L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
-                    <path class="wave-front" fill="#ff007f" d="M0,64L120,58.7C240,53,480,43,720,53.3C960,64,1200,96,1320,101.3L1440,106L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
-                </svg>
-            </div>
-        </section>
-
-        <!-- 5. CONFIRMACIÓN (RSVP) -->
-        <section class="rsvp-section" id="sec-rsvp">
-            <div class="neon-string">
-                <div class="neon-bulb bulb-yellow"></div>
-                <div class="neon-bulb bulb-green"></div>
-                <div class="neon-bulb bulb-pink"></div>
-                <div class="neon-bulb bulb-blue"></div>
-                <div class="neon-bulb bulb-yellow"></div>
-                <div class="neon-bulb bulb-green"></div>
-                <div class="neon-bulb bulb-pink"></div>
-                <div class="neon-bulb bulb-blue"></div>
-            </div>
-
-            <div class="content-wrapper animate-rsvp">
-                <span class="cursive">¡Te Esperamos!</span>
-                <h2 style="font-size: 3.5rem; margin: 10px 0 20px">Te atreveras a entrar al agua?</h2>
-                <p style="max-width: 500px; margin: 0 auto 30px; line-height: 1.7; font-size: 1.1rem;">
-                    Asegúrate de confirmar tu asistencia para que podamos preparar todo para ti. ¡No olvides traer tu mejor actitud y muchas ganas de divertirte!
-                </p>
-
-                <a href="https://wa.me/523324396908?text=%C2%A1Hola!%20Confirmo%20mi%20asistencia%20a%20tu%20Pool%20Party%20de%2015%20a%C3%B1os%20%F0%9F%8F%8A%E2%80%8D%E2%99%82%EF%B8%8F%F0%9F%A6%A9" target="_blank" class="btn btn-whatsapp">
-                    <i class="fab fa-whatsapp" style="font-size: 1.4rem; vertical-align: middle; margin-right: 8px;"></i> CONFIRMAR ASISTENCIA
-                </a>
-            </div>
-        </section>
-    </div>
-
-    <script>
-        gsap.registerPlugin(ScrollTrigger);
-
-        const movingTarget = document.getElementById('moving-target');
-        const flap = document.getElementById('envelope-flap');
-        const letter = document.getElementById('envelope-letter');
-        const wrapper = document.getElementById('envelope-wrapper');
-        const mainContent = document.getElementById('main-content');
-        const music = document.getElementById('bg-music');
-        const musicCtrl = document.getElementById('music-control');
-        const bubblesContainer = document.getElementById('bubbles-container');
-
-        // =========================================================
-        // [JAVASCRIPT: CONFIGURACIÓN DE TAMAÑO Y VELOCIDAD]
-        // =========================================================
-        const rectWidth = 260;  /* Debe coincidir exactamente con el width de .moving-target en CSS */
-        const rectHeight = 230; /* Debe coincidir exactamente con el height de .moving-target en CSS */
-
-        let w = window.innerWidth;
-        let h = window.innerHeight;
-
-        // Iniciar centrado
-        let posX = (w - rectWidth) / 2;
-        let posY = (h - rectHeight) / 2;
-
-        // VELOCIDAD: Modifica estos números (un valor más alto = rebota más rápido)
-        let vx = 4.5; 
-        let vy = 4.5; 
-
-        if (Math.random() > 0.5) vx *= -1;
-        if (Math.random() > 0.5) vy *= -1;
-
-        const neonColors = ['#00f0ff', '#ff007f', '#ffe600', '#00ff66'];
-
-        function changeNeonColor() {
-            const randomColor = neonColors[Math.floor(Math.random() * neonColors.length)];
-            gsap.to('#envelope-base', { borderColor: randomColor, duration: 0.2 });
-            gsap.to('#envelope-hint', { color: randomColor, duration: 0.2 });
-        }
-
-        function updateEnvelopePhysics() {
-            w = window.innerWidth;
-            h = window.innerHeight;
-
-            posX += vx;
-            posY += vy;
-
-            if (posX <= 0) { posX = 0; vx *= -1; changeNeonColor(); }
-            else if (posX >= w - rectWidth) { posX = w - rectWidth; vx *= -1; changeNeonColor(); }
-
-            if (posY <= 0) { posY = 0; vy *= -1; changeNeonColor(); }
-            else if (posY >= h - rectHeight) { posY = h - rectHeight; vy *= -1; changeNeonColor(); }
-
-            gsap.set(movingTarget, { x: posX, y: posY });
-        }
-
-        gsap.ticker.add(updateEnvelopePhysics);
-
-        // --- APERTURA ---
-        movingTarget.addEventListener('click', () => {
-            gsap.ticker.remove(updateEnvelopePhysics);
-
-            let centerScreenX = (window.innerWidth - rectWidth) / 2;
-            let centerScreenY = (window.innerHeight - rectHeight) / 2;
-
-            let openTimeline = gsap.timeline({
-                onComplete: () => {
-                    wrapper.style.display = 'none';
-                    initScrollTriggerAndEffects();
-                }
-            });
-
-            openTimeline
-                .to(flap, { duration: 0.5, rotateX: 180, borderTopColor: "#00a3af", ease: "power2.inOut" })
-                .to(letter, { duration: 0.7, y: -130, z: 50, scale: 1.05, ease: "back.out(1.2)" }, "-=0.1")
-                .to({}, { duration: 2.5 }) 
-                .to(movingTarget, { 
-                    duration: 1.2, 
-                    scale: 3.5, 
-                    z: 400, 
-                    x: centerScreenX, 
-                    y: centerScreenY, 
-                    opacity: 0, 
-                    ease: "power2.inOut" 
-                })
-                .to(wrapper, { duration: 0.7, opacity: 0, ease: "power2.out" }, "-=0.8")
-                .set(mainContent, { display: "block", opacity: 1, visibility: "visible" }, "-=0.7")
-                .from('.animate-hero *', { duration: 1.2, y: 50, opacity: 0, stagger: 0.2, ease: "power3.out" }, "-=0.2");
-
-            // AJUSTE DE TIEMPO: Forzamos a la canción a iniciar en el segundo 20
-            music.currentTime = 20; 
-
-            music.play().then(() => {
-                musicCtrl.style.display = "flex";
-            }).catch(err => console.log("Audio esperando interactividad."));
-        });
-
-        musicCtrl.addEventListener('click', () => {
-            if (music.paused) {
-                music.play();
-                musicCtrl.innerHTML = '<i class="fas fa-volume-up"></i>';
-            } else {
-                music.pause();
-                musicCtrl.innerHTML = '<i class="fas fa-volume-mute"></i>';
-            }
-        });
-
-        function initScrollTriggerAndEffects() {
-            gsap.to(".wave-front", { x: "-=120", y: "+=10", duration: 1.2, repeat: -1, yoyo: true, ease: "sine.inOut" });
-            gsap.to(".wave-back", { x: "+=90", y: "-=8", duration: 1.6, repeat: -1, yoyo: true, ease: "sine.inOut" });
-
-            ScrollTrigger.create({
-                onUpdate: (self) => {
-                    let velocity = Math.abs(self.getVelocity() / 1600);
-                    gsap.to(".wave-divider", { scaleY: 1 + Math.min(velocity, 0.5), duration: 0.3, overwrite: "auto" });
-                }
-            });
-
-            gsap.to(".animate-hero", {
-                yPercent: 40,
-                scale: 0.93,
-                scrollTrigger: { trigger: "#sec-hero", start: "top top", end: "bottom top", scrub: 2 }
-            });
-
-            gsap.from(".core-details", {
-                y: 120,
-                opacity: 0,
-                scrollTrigger: { trigger: "#sec-details", start: "top 95%", end: "top 45%", scrub: 2.5 }
-            });
-
-            gsap.from(".glass-card", {
-                rotationX: 20,
-                y: 140,
-                scale: 0.88,
-                opacity: 0,
-                scrollTrigger: { trigger: "#sec-location", start: "top 95%", end: "top 40%", scrub: 2.5 }
-            });
-
-            gsap.from(".info-card", {
-                x: (i) => i === 0 ? -120 : 120,
-                rotationZ: (i) => i === 0 ? -6 : 6,
-                opacity: 0,
-                scrollTrigger: { trigger: "#sec-info", start: "top 95%", end: "top 50%", scrub: 2.5 }
-            });
-
-            gsap.from(".animate-rsvp *", {
-                y: 60,
-                opacity: 0,
-                stagger: 0.15,
-                scrollTrigger: { trigger: "#sec-rsvp", start: "top 90%", end: "top 55%", scrub: 2 }
-            });
-
-            gsap.to(".neon-bulb", {
-                opacity: "random(0.1, 1)",
-                scale: "random(0.85, 1.15)",
-                duration: "random(0.15, 0.45)",
-                repeat: -1,
-                yoyo: true,
-                stagger: { amount: 1.2, from: "random" },
-                ease: "none"
-            });
-
-            let neonTimeline = gsap.timeline({ repeat: -1, repeatDelay: 4 });
-            neonTimeline.to("#main-neon-title", { opacity: 0.3, duration: 0.1, yoyo: true, repeat: 3 })
-                        .to("#main-neon-title", { opacity: 1, duration: 0.05 })
-                        .to("#main-neon-title", { opacity: 0.5, duration: 0.08 })
-                        .to("#main-neon-title", { opacity: 1, duration: 0.1 });
-
-            for (let i = 0; i < 35; i++) { createBubble(true); }
-            setInterval(() => {
-                if (document.querySelectorAll(".bubble").length < 45) { createBubble(false); }
-            }, 500);
-        }
-
-        function createBubble(isInitial) {
-            const bubble = document.createElement("div");
-            bubble.className = "bubble";
-            const size = Math.random() * 23 + 12;
-            bubble.style.width = `${size}px`;
-            bubble.style.height = `${size}px`;
-
-            const startX = Math.random() * window.innerWidth;
-            const startY = isInitial ? Math.random() * window.innerHeight : window.innerHeight + 50;
-            bubblesContainer.appendChild(bubble);
-
-            gsap.set(bubble, { x: startX, y: startY, opacity: Math.random() * 0.4 + 0.2 });
-
-            gsap.to(bubble, {
-                y: -60,
-                x: `+=${Math.random() * 100 - 50}`,
-                duration: isInitial ? (Math.random() * 7 + 4) * (startY / window.innerHeight) : (Math.random() * 9 + 6),
-                ease: "none",
-                onComplete: () => { bubble.remove(); }
-            });
-        }
-
-        document.querySelectorAll('.btn').forEach(button => {
-            button.addEventListener('mouseenter', () => {
-                gsap.to(button, { scale: 1.06, duration: 0.3, ease: "elastic.out(1.2, 0.5)" });
-            });
-            button.addEventListener('mouseleave', () => {
-                gsap.to(button, { scale: 1, duration: 0.3, ease: "power2.out" });
-            });
-        });
-
-        const targetDate = new Date("July 25, 2026 14:00:00").getTime();
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const difference = targetDate - now;
-            if (difference > 0) {
-                const d = Math.floor(difference / (1000 * 60 * 60 * 24));
-                const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-                document.getElementById("days").innerText = d < 10 ? "0" + d : d;
-                document.getElementById("hours").innerText = h < 10 ? "0" + h : h;
-                document.getElementById("minutes").innerText = m < 10 ? "0" + m : m;
-            }
-        }
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-    </script>
+      <section class="final-scene" aria-labelledby="finalTitle"><p>CUANDO CAIGA LA NOCHE</p><h2 id="finalTitle">NO<br><em>FALTES</em></h2><div class="final-date"><strong data-event="day">07</strong><span data-event="monthYear">NOV / 2026</span></div><p>TE ESPERAMOS DESPUÉS DEL ANOCHECER.</p><button id="replayInvitation" type="button">↻ VER INVITACIÓN DE NUEVO</button></section>
+    </main>
+    <footer class="site-footer"><span>HALLOWEEN FEST</span><span data-event="fullDate">07 NOVIEMBRE 2026</span><a href="#top">VOLVER ARRIBA ↑</a></footer>
+  </div>
+  <audio class="background-music" id="backgroundMusic" preload="metadata" loop>
+    <source src="song.mp3" type="audio/mpeg">
+    Tu navegador no puede reproducir este audio.
+  </audio>
 </body>
 </html>

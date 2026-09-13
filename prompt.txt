@@ -1,0 +1,108 @@
+REDISEÑO COMPLETO DE INVITACIÓN DIGITAL — HALLOWEEN NEÓN
+
+Quiero que rediseñes por completo la invitación digital existente en este proyecto. Trabaja directamente sobre `index.html`, `style.css` y `script.js`, sin crear una aplicación nueva ni cambiar la tecnología actual: debe seguir funcionando como un sitio estático en HTML, CSS y JavaScript, listo para abrir localmente o publicar en GitHub Pages.
+
+Antes de modificar, inspecciona toda la implementación actual y conserva las funciones útiles: personalización mediante el objeto `EVENT`, nombre del invitado, número de pases, cuenta regresiva, ubicación con Google Maps, itinerario, dress code, reglas, confirmación RSVP/WhatsApp, audio opcional, accesibilidad, responsive y soporte para `prefers-reduced-motion`. Puedes reorganizar, simplificar o reinterpretar las secciones, pero no elimines información ni funcionalidad importante.
+
+REFERENCIAS VISUALES OBLIGATORIAS
+
+Usa como referencias principales las dos imágenes que están en la raíz del proyecto:
+
+1. `invitacion image.jpeg`: debe definir la dirección artística general. Toma de ella el aspecto de póster de fiesta de Halloween, el fondo negro intenso, la composición en capas, los colores verde ácido, morado eléctrico y naranja fuego, los brochazos, salpicaduras, pintura goteando, telarañas, murciélagos, humo de color, calabazas, esqueletos y la energía de evento nocturno. No copies literalmente todos sus textos ni conviertas la página en una simple imagen pegada; traduce su lenguaje visual a una interfaz web clara, moderna y animada.
+
+2. `s-l1200.jpg`: usa la máscara LED como motivo visual protagonista y recurrente. Inspírate en su rostro negro con ojos en X y sonrisa cosida luminosa. Puedes mostrar la imagen dentro de una composición, recortarla visualmente con CSS o usarla como referencia para crear efectos de líneas de neón. Los colores de la máscara pueden cambiar entre cian, verde, morado y naranja según la sección o la interacción.
+
+La identidad final debe sentirse como una mezcla coherente entre “póster urbano de Halloween”, “fiesta clandestina de neón” y “experiencia digital cinematográfica”. Debe ser intensa y divertida, no elegante/victoriana. Sustituye la estética sepia, crema y mansión clásica que domina actualmente por una estética negra, fluorescente, gráfica, juvenil y de alto contraste.
+
+EXPERIENCIA INICIAL OBLIGATORIA: CARTA DE INVITACIÓN
+
+Antes de mostrar cualquier parte de la página debe aparecer una escena de entrada a pantalla completa. No debe verse el hero, el menú ni el contenido de fondo hasta abrir la invitación.
+
+Diseña una carta o sobre de invitación centrado, en formato vertical y perfectamente adaptado a teléfono. Debe sentirse físico pero conservar la estética de neón:
+
+- Fondo de la escena completamente oscuro, con viñeta, humo morado/verde muy sutil, partículas ligeras y destellos ocasionales.
+- Sobre negro mate o papel negro texturizado, bordes ligeramente desgastados, reflejos de luz de color y detalles impresos en verde ácido, morado y naranja.
+- Sello central inspirado en la máscara LED de `s-l1200.jpg`: ojos en X y sonrisa cosida que emiten un resplandor pulsante.
+- Texto frontal breve: “TIENES UNA INVITACIÓN”, el nombre personalizado del invitado tomado de `EVENT.guestName` y la instrucción “TOCA PARA ABRIR”.
+- Incluye un pequeño indicador táctil animado, claro pero no invasivo.
+- Toda la carta debe funcionar como un botón accesible, operable con touch, clic, Enter y barra espaciadora. Añade texto accesible y foco visible.
+
+Al tocar o hacer clic, ejecuta una secuencia de apertura fluida y memorable:
+
+1. El sello de máscara se enciende y cambia rápidamente entre cian, verde, morado y naranja.
+2. Se escucha un efecto breve solo si puede iniciarse legalmente tras la interacción del usuario; no reproduzcas audio automático antes del gesto.
+3. La solapa del sobre se abre con profundidad 3D.
+4. La carta interior se desliza hacia arriba y revela por un instante el mensaje “ESTÁS INVITADO/A”.
+5. La carta se acerca a cámara, llena la pantalla y se transforma mediante un destello/glitch de neón en el hero principal de la página.
+6. Al terminar, desbloquea el scroll, coloca el foco de forma razonable en el contenido y retira la portada del árbol de accesibilidad.
+
+La secuencia completa debe durar aproximadamente entre 1.8 y 2.8 segundos. Debe poder saltarse o reducirse si el usuario tiene activado `prefers-reduced-motion`. Guarda en `sessionStorage` que la carta ya fue abierta para no repetir la animación al volver desde un enlace o recargar durante la misma sesión; ofrece además una opción discreta “VER INVITACIÓN DE NUEVO” al final de la página.
+
+DIRECCIÓN DE ARTE Y SISTEMA VISUAL
+
+- Paleta principal: negro carbón y negro puro como base; verde neón ácido como color dominante; morado eléctrico y naranja encendido como acentos; cian solo para destellos. Mantén texto de lectura larga en blanco cálido o gris muy claro.
+- Usa variables CSS para todos los colores, resplandores, radios, espaciados y duraciones.
+- Tipografía: títulos grandes con carácter de pincel, horror gráfico o graffiti legible; textos informativos en una sans condensada y clara. Si usas Google Fonts, selecciona fuentes reales disponibles y limita la carga a dos familias. Incluye fallbacks.
+- Los títulos pueden llevar cortes, subrayados pintados, bordes ásperos o goteos creados con CSS/SVG, pero nunca deben perder legibilidad.
+- Usa fondos con capas: gradientes radiales, ruido o grano muy ligero, manchas de aerosol, telarañas y humo. Evita que todos los elementos brillen al mismo tiempo; reserva el glow intenso para jerarquía y llamadas a la acción.
+- Los iconos deben compartir el mismo lenguaje: trazo grueso de neón, imperfecto y enérgico.
+- Evita un resultado genérico de plantilla, cajas repetidas, glassmorphism excesivo, degradados azul-violeta corporativos o estética de casino.
+
+ESTRUCTURA PROPUESTA DE LA PÁGINA
+
+1. Hero: composición de póster a pantalla completa. La máscara LED debe ser el foco central o lateral dominante, rodeada de humo, luna naranja, murciélagos y telarañas. Incluye “ESTÁS INVITADO/A”, “HALLOWEEN FEST”, la fecha y una llamada a deslizar. Usa profundidad/parallax moderado y conserva excelente lectura en móvil.
+
+2. Invitación personalizada: muestra nombre del invitado y pases como si fueran una credencial VIP fluorescente o boleto de acceso. Debe sentirse especial y claramente personalizada.
+
+3. Cuenta regresiva: números enormes como displays de neón, con una ligera vibración/glitch ocasional y etiquetas claras. No animes continuamente de forma molesta.
+
+4. Información esencial: fecha, hora y lugar en tres bloques o una franja inspirada en el póster de referencia, con iconos neón de calendario, pin y reloj. La ubicación debe conservar el enlace funcional a Google Maps.
+
+5. Experiencia/itinerario: conviértelo en un recorrido vertical de fiesta con líneas pintadas, salpicaduras y cambios de color; cada hora debe distinguirse rápidamente.
+
+6. Dress code y reglas: enfatiza “DISFRAZ OBLIGATORIO”. Integra máscara, calabaza, telaraña o mano de esqueleto como elementos decorativos, sin saturar el texto.
+
+7. Galería o sección ambiental: reinterpreta las imágenes actuales si todavía aportan valor, aplicando overlays y color grading neón para que no choquen con la nueva identidad. Si las escenas victorianas rompen demasiado la coherencia, reduce su protagonismo en vez de borrar la galería sin reemplazo.
+
+8. RSVP: debe ser el cierre más potente. Usa un panel negro con borde pintado verde/morado, título “¿TE ATREVES A VENIR?” y un botón principal grande “CONFIRMAR ASISTENCIA”. Conserva la generación segura del mensaje de WhatsApp y los estados actuales del formulario.
+
+9. Escena final: frase breve “NO FALTES” o “TE ESPERAMOS DESPUÉS DEL ANOCHECER”, la fecha y el control para volver a ver la carta inicial.
+
+INTERACCIONES Y MOVIMIENTO
+
+- Prioriza microinteracciones táctiles: brillo que sigue al dedo solo durante la pulsación, botones que responden con escala mínima, trazos que se encienden y secciones que entran con desplazamientos cortos.
+- Usa glitch con moderación y solo en títulos, máscara o transiciones clave; jamás sobre párrafos ni campos de formulario.
+- El humo, partículas y parallax deben ser sutiles, eficientes y pausarse cuando la pestaña no esté visible.
+- Mantén scroll suave sin secuestrar el desplazamiento. En móvil, no uses secciones fijadas demasiado largas ni animaciones que impidan avanzar.
+- Si GSAP ya está disponible, puedes reutilizarlo; la página debe conservar una presentación funcional si el CDN falla.
+- No agregues frameworks, procesos de compilación ni dependencias pesadas.
+
+RESPONSIVE, ACCESIBILIDAD Y RENDIMIENTO
+
+- Diseña mobile first para 320 px en adelante y valida especialmente 360×800, 390×844, tablet y escritorio ancho.
+- Respeta `prefers-reduced-motion`, `Save-Data` y navegación por teclado.
+- No ocultes contenido importante detrás de efectos. Mantén contraste AA como mínimo en textos y controles.
+- La portada debe manejar correctamente bloqueo y desbloqueo de scroll, foco, Escape si decides permitir cerrar, y atributos `aria-hidden`/`inert`.
+- Todas las imágenes deben tener dimensiones para evitar saltos de diseño; usa `loading="lazy"` fuera del primer viewport y formatos/tamaños razonables.
+- Optimiza los efectos para que la experiencia sea fluida en teléfonos de gama media. Evita filtros de desenfoque grandes, demasiadas sombras animadas o listeners sin limitar.
+- Conserva metadatos SEO/Open Graph coherentes con la nueva identidad y actualiza el color del navegador.
+
+CONTENIDO Y DATOS
+
+- No inventes datos definitivos donde actualmente hay valores de ejemplo. Mantén centralizados fecha, invitado, pases, lugar, dirección y WhatsApp en `EVENT`, y haz que la interfaz tome los valores desde allí.
+- Conserva español correcto, mayúsculas intencionales y mensajes breves.
+- No incrustes los textos de la referencia como si fueran datos reales del evento.
+
+CRITERIOS DE ACEPTACIÓN
+
+- Al abrir el sitio por primera vez en una sesión solo se ve la carta/sobre de invitación.
+- Touch, clic, Enter y espacio abren la carta; la transición revela la página sin parpadeos ni scroll accidental.
+- La estética final refleja de forma evidente ambas imágenes: póster Halloween neón + máscara LED.
+- El sitio sigue siendo legible, rápido, responsive y usable con movimiento reducido.
+- Nombre, pases, cuenta regresiva, ubicación, mapa, RSVP y WhatsApp continúan funcionando.
+- No hay errores en consola, enlaces rotos, contenido desbordado ni elementos fuera de pantalla a 320 px.
+- La experiencia conserva un fallback útil sin GSAP o sin conexión a CDN.
+
+ENTREGA
+
+Implementa el rediseño completo en los archivos existentes. Al terminar, revisa el resultado en móvil y escritorio, corrige desbordamientos y problemas de foco, y resume los cambios realizados junto con cualquier dato de ejemplo que todavía deba personalizarse. No te limites a describir el diseño: realiza la implementación funcional.
