@@ -1,7 +1,7 @@
 /* Personaliza únicamente este objeto. El resto de la interfaz toma sus datos de aquí. */
 const EVENT = {
   date: new Date("2026-11-07T21:00:00-06:00"),
-  guestName: "ALEJANDRO",
+  guestName: "A TI, MI ALMA PREFERIDA",
   passCount: 2,
   locationName: "HACIENDA BLACKWOOD",
   address: "Av. Ejemplo 666, Ciudad de México",
@@ -265,9 +265,10 @@ function initAudio() {
   const targetVolume = .35;
   let fadeFrame = 0;
   let unavailable = false;
-  let userActivated = false;
+  let playbackAuthorized = false;
   let pausedForVisibility = false;
   let desiredEnabled = true;
+  let fallbackListening = false;
 
   try { desiredEnabled = sessionStorage.getItem("halloweenMusicEnabled") !== "0"; } catch (_) {}
   music.loop = true;
@@ -305,31 +306,65 @@ function initAudio() {
     setControl(false);
   };
 
-  const playWithFade = async () => {
+  const removeGestureFallback = () => {
+    if (!fallbackListening) return;
+    document.removeEventListener("pointerdown", handleFirstPointer, true);
+    document.removeEventListener("keydown", handleFirstKey, true);
+    fallbackListening = false;
+  };
+
+  const playWithFade = async (fromGesture = false) => {
     if (unavailable) { setControl(false); return false; }
-    userActivated = true;
+    if (fromGesture) playbackAuthorized = true;
     pausedForVisibility = false;
     if (saveData && music.preload !== "auto") {
       music.preload = "auto";
       music.load();
     }
     try {
+      if (!music.paused) {
+        playbackAuthorized = true;
+        removeGestureFallback();
+        setControl(true);
+        return true;
+      }
       music.volume = 0;
       const request = music.play();
       if (request && typeof request.then === "function") await request;
+      playbackAuthorized = true;
+      removeGestureFallback();
       fadeVolume(targetVolume, 1200);
       setControl(true);
       return true;
     } catch (_) {
-      markUnavailable();
+      music.pause();
+      music.volume = 0;
+      setControl(false);
       return false;
     }
   };
 
+  function handleFirstPointer(event) {
+    if (event.target.closest?.("#soundToggle, #replayInvitation")) return;
+    playWithFade(true);
+  }
+
+  function handleFirstKey(event) {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    if (event.target.closest?.("#soundToggle, #replayInvitation")) return;
+    playWithFade(true);
+  }
+
+  const listenForGestureFallback = () => {
+    if (fallbackListening || unavailable || !desiredEnabled) return;
+    fallbackListening = true;
+    document.addEventListener("pointerdown", handleFirstPointer, true);
+    document.addEventListener("keydown", handleFirstKey, true);
+  };
+
   startBackgroundMusic = () => {
-    userActivated = true;
     if (!desiredEnabled) { setControl(false); return Promise.resolve(false); }
-    return playWithFade();
+    return playWithFade(true);
   };
 
   resetBackgroundMusic = () => {
@@ -337,9 +372,10 @@ function initAudio() {
     music.pause();
     try { music.currentTime = 0; } catch (_) {}
     music.volume = 0;
-    userActivated = false;
+    playbackAuthorized = false;
     pausedForVisibility = false;
     setControl(false);
+    listenForGestureFallback();
   };
 
   button.addEventListener("click", () => {
@@ -353,22 +389,26 @@ function initAudio() {
     }
     desiredEnabled = true;
     try { sessionStorage.setItem("halloweenMusicEnabled", "1"); } catch (_) {}
-    playWithFade();
+    playWithFade(true);
   });
 
   music.addEventListener("error", markUnavailable);
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
-      pausedForVisibility = !music.paused && desiredEnabled && userActivated;
+      pausedForVisibility = !music.paused && desiredEnabled && playbackAuthorized;
       cancelAnimationFrame(fadeFrame);
       music.pause();
       setControl(false);
-    } else if (pausedForVisibility && desiredEnabled && userActivated) {
+    } else if (pausedForVisibility && desiredEnabled && playbackAuthorized) {
       playWithFade();
     }
   });
 
   setControl(false);
+  if (desiredEnabled) {
+    if (saveData) listenForGestureFallback();
+    else playWithFade().then((playing) => { if (!playing) listenForGestureFallback(); });
+  }
 }
 function initFallbackReveals() {
   const revealNodes = $$(".reveal, .reveal-card, .timeline-item");
