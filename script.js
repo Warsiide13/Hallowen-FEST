@@ -1,10 +1,12 @@
 /* Personaliza únicamente este objeto. El resto de la interfaz toma sus datos de aquí. */
 const EVENT = {
-  date: new Date("2026-11-07T21:00:00-06:00"),
+  date: new Date("2026-11-07T19:00:00-06:00"),
+  endDate: new Date("2026-11-08T03:00:00-06:00"),
   guestName: "A TI, MI ALMA PREFERIDA",
-  passCount: 2,
-  locationName: "HACIENDA BLACKWOOD",
-  address: "Av. Ejemplo 666, Ciudad de México",
+  passCount: 1,
+  locationName: "TERRAZA PELAYO’S 2 LA GRANDE",
+  address: "UBICACIÓN EXACTA EN GOOGLE MAPS",
+  mapUrl: "https://www.google.com/maps/place/Terraza+Pelayo%E2%80%99s+2+La+grande/@20.6816878,-103.2658641,21z/data=!4m14!1m7!3m6!1s0x8428b7056b15c28b:0x386df4990ac9b6dc!2sTerraza+Pelayo%E2%80%99s+2+La+grande!8m2!3d20.681669!4d-103.2658173!16s%2Fg%2F11v0ynx4rx!3m5!1s0x8428b7056b15c28b:0x386df4990ac9b6dc!8m2!3d20.681669!4d-103.2658173!16s%2Fg%2F11v0ynx4rx?entry=ttu&g_ep=EgoyMDI2MDkwOS4wIKXMDSoASAFQAw%3D%3D",
   whatsappNumber: "5213333394127" // Lada + número, solo dígitos, sin espacios ni el signo +.
 };
 
@@ -22,11 +24,13 @@ function setEventDetails() {
   const date = EVENT.date;
   const parts = new Intl.DateTimeFormat("es-MX", { weekday: "long", day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "America/Mexico_City" }).formatToParts(date);
   const get = (type) => parts.find((part) => part.type === type)?.value || "";
+  const endParts = new Intl.DateTimeFormat("es-MX", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "America/Mexico_City" }).formatToParts(EVENT.endDate);
+  const endGet = (type) => endParts.find((part) => part.type === type)?.value || "";
   const details = {
     weekday: get("weekday").toLocaleUpperCase("es-MX"),
     day: get("day"),
     month: get("month").toLocaleUpperCase("es-MX"),
-    time: `${get("hour")}:${get("minute")} HRS`,
+    time: `${get("hour")}:${get("minute")}–${endGet("hour")}:${endGet("minute")} HRS`,
     fullDate: `${get("day")} ${get("month").toLocaleUpperCase("es-MX")} ${get("year")}`,
     monthYear: `${get("month").slice(0, 3).toLocaleUpperCase("es-MX")} / ${get("year")}`,
     numericDate: `${get("day")} · ${String(date.getMonth() + 1).padStart(2, "0")} · ${get("year")}`
@@ -37,7 +41,7 @@ function setEventDetails() {
   $("#passCount").textContent = String(Math.max(1, EVENT.passCount)).padStart(2, "0");
   $("#locationName").textContent = EVENT.locationName;
   $("#locationAddress").textContent = EVENT.address;
-  $("#mapLink").href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${EVENT.locationName}, ${EVENT.address}`)}`;
+  $("#mapLink").href = EVENT.mapUrl;
   $("#rsvpName").value = EVENT.guestName.toLocaleLowerCase("es-MX").replace(/(^|\s)\S/g, (letter) => letter.toLocaleUpperCase("es-MX"));
   const guestSelect = $("#guestNumber");
   const passes = Math.max(1, Math.min(10, Math.floor(Number(EVENT.passCount) || 1)));
@@ -49,7 +53,7 @@ function setEventDetails() {
   }));
   guestSelect.value = String(passes);
   document.title = `Halloween Fest · ${details.day}.${String(date.getMonth() + 1).padStart(2, "0")}.${date.getFullYear()}`;
-  const description = `Halloween Fest · ${details.weekday.toLocaleLowerCase("es-MX")} ${details.day} de ${details.month.toLocaleLowerCase("es-MX")} de ${date.getFullYear()} a las ${details.time}.`;
+  const description = `Halloween Fest · ${details.weekday.toLocaleLowerCase("es-MX")} ${details.day} de ${details.month.toLocaleLowerCase("es-MX")} de ${date.getFullYear()}, de ${details.time}.`;
   $("meta[name='description']").content = description;
   $("meta[property='og:title']").content = document.title;
   $("meta[property='og:description']").content = description;
